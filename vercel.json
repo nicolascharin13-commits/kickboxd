@@ -6,11 +6,15 @@
     },
     {
       "path": "/api/cron/sync-upcoming",
-      "schedule": "0 6 * * 1"
+      "schedule": "0 6 * * *"
     },
     {
       "path": "/api/cron/sync-competitions",
       "schedule": "0 5 * * 1"
+    },
+    {
+      "path": "/api/cron/keepalive",
+      "schedule": "0 3 */3 * *"
     }
   ]
 }

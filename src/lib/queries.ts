@@ -64,6 +64,17 @@ export async function getCompetition(id: number) {
   return data
 }
 
+export async function getCompetitionSeasons(competitionId: number): Promise<string[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('matches')
+    .select('season')
+    .eq('competition_id', competitionId)
+    .order('season', { ascending: false })
+  const seasons = [...new Set((data ?? []).map((r) => r.season as string))].sort().reverse()
+  return seasons
+}
+
 export async function getCompetitionMatches(competitionId: number, season?: string) {
   const supabase = await createClient()
   let query = supabase
@@ -74,7 +85,7 @@ export async function getCompetitionMatches(competitionId: number, season?: stri
 
   if (season) query = query.eq('season', season)
 
-  const { data } = await query.limit(100)
+  const { data } = await query.limit(500)
   return data ?? []
 }
 

@@ -6,16 +6,17 @@ import { syncCompetition } from '@/lib/sync'
 const COMPETITIONS = [
   { code: 'WC', season: '2026-2027' }, // Coupe du Monde 2026
   { code: 'EC', season: '2024-2025' }, // Euro
-  { code: 'CL', season: '2024-2025' }, // Champions League
-  { code: 'FL1', season: '2024-2025' }, // Ligue 1
-  { code: 'PL', season: '2024-2025' }, // Premier League
-  { code: 'PD', season: '2024-2025' }, // La Liga
-  { code: 'BL1', season: '2024-2025' }, // Bundesliga
-  { code: 'SA', season: '2024-2025' }, // Serie A
-  { code: 'DED', season: '2024-2025' }, // Eredivisie (Pays-Bas)
-  { code: 'PPL', season: '2024-2025' }, // Primeira Liga (Portugal)
-  { code: 'ELC', season: '2024-2025' }, // Championship (Angleterre D2)
-  { code: 'BSA', season: '2024-2025' }, // Série A Brésilienne
+  { code: 'CL', season: '2026-2027' }, // Champions League
+  { code: 'FL1', season: '2026-2027' }, // Ligue 1
+  { code: 'PL', season: '2026-2027' }, // Premier League
+  { code: 'PD', season: '2026-2027' }, // La Liga
+  { code: 'BL1', season: '2026-2027' }, // Bundesliga
+  { code: 'SA', season: '2026-2027' }, // Serie A
+  { code: 'DED', season: '2026-2027' }, // Eredivisie (Pays-Bas)
+  { code: 'PPL', season: '2026-2027' }, // Primeira Liga (Portugal)
+  { code: 'ELC', season: '2026-2027' }, // Championship (Angleterre D2)
+  { code: 'BSA', season: '2026-2027' }, // Série A Brésilienne
+  { code: 'CLI', season: '2026-2027' }, // Copa Libertadores
 ]
 
 export async function GET(request: Request) {
@@ -33,6 +34,8 @@ export async function GET(request: Request) {
     } catch (err) {
       results[code] = { error: err instanceof Error ? err.message : String(err) }
     }
+    // Respecter la limite football-data.org : 10 req/min
+    await new Promise((resolve) => setTimeout(resolve, 7000))
   }
 
   return NextResponse.json({ success: true, results })
