@@ -46,10 +46,12 @@ export default async function ProfilePage({ params }: Props) {
   } = await supabase.auth.getUser()
 
   const isOwnProfile = user?.id === profile.id
-  const following = user && !isOwnProfile ? await isFollowing(user.id, profile.id) : false
 
-  const recentReviews = await getProfileRecentReviews(profile.id)
-  const recentDiary = await getDiaryEntries(profile.id, { limit: 4 })
+  const [following, recentReviews, recentDiary] = await Promise.all([
+    user && !isOwnProfile ? isFollowing(user.id, profile.id) : Promise.resolve(false),
+    getProfileRecentReviews(profile.id),
+    getDiaryEntries(profile.id, { limit: 4 }),
+  ])
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">

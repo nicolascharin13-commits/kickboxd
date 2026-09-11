@@ -5,7 +5,7 @@ import { getTopUsers, searchProfiles } from '@/lib/queries'
 import { FollowButton } from '@/components/kickbox/FollowButton'
 import { UserAvatar } from '@/components/kickbox/UserAvatar'
 
-export const revalidate = 0
+export const revalidate = 300
 
 interface Props {
   searchParams: Promise<{ q?: string }>

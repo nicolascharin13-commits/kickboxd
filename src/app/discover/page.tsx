@@ -4,7 +4,7 @@ import { getRecentMatches, getUpcomingMatches } from '@/lib/queries'
 import { MatchCard } from '@/components/kickbox/MatchCard'
 import type { Match } from '@/lib/types'
 
-export const revalidate = 300 // 5 min
+export const revalidate = 60
 
 export default async function DiscoverPage() {
   const supabase = await createClient()
