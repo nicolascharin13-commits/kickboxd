@@ -108,13 +108,15 @@ export default async function DiaryPage({ params, searchParams }: Props) {
                             </form>
                           )}
                         </div>
-                        {entry.review && (entry.review as { content: string }).content && (
-                          <Link href={`/matches/${match.id}`} className="block px-1">
-                            <p className="text-muted-foreground hover:text-foreground line-clamp-2 text-xs leading-relaxed transition-colors">
-                              &ldquo;{(entry.review as { content: string }).content}&rdquo;
-                            </p>
-                          </Link>
-                        )}
+                        {entry.review &&
+                          (entry.review as unknown as { content: string }).content && (
+                            <Link href={`/matches/${match.id}`} className="block px-1">
+                              <p className="text-muted-foreground hover:text-foreground line-clamp-2 text-xs leading-relaxed transition-colors">
+                                &ldquo;{(entry.review as unknown as { content: string }).content}
+                                &rdquo;
+                              </p>
+                            </Link>
+                          )}
                       </div>
                     )
                   })}

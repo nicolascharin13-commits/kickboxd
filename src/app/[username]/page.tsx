@@ -139,7 +139,7 @@ export default async function ProfilePage({ params }: Props) {
               const match = entry.match as unknown as Match
               const homeTeam = match?.home_team
               const awayTeam = match?.away_team
-              const review = entry.review as { content: string; rating: number } | null
+              const review = entry.review as unknown as { content: string; rating: number } | null
               return (
                 <Link
                   key={entry.id}
