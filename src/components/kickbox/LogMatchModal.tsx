@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { RatingStars } from './RatingStars'
-import { logMatch } from '@/app/actions/log'
+import { logMatch, removeFromDiary } from '@/app/actions/log'
 
 interface LogMatchModalProps {
   matchId: number
@@ -191,13 +191,29 @@ export function LogMatchModal({
                 </p>
               )}
 
-              <div className="flex justify-end gap-2 pt-1">
-                <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                  Annuler
-                </Button>
-                <Button type="submit" disabled={loading}>
-                  {loading ? 'Enregistrement…' : 'Enregistrer'}
-                </Button>
+              <div className="flex items-center justify-between pt-1">
+                {isLogged && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-destructive hover:text-destructive text-xs"
+                    onClick={async () => {
+                      await removeFromDiary(matchId)
+                      setOpen(false)
+                      router.refresh()
+                    }}
+                  >
+                    Supprimer du journal
+                  </Button>
+                )}
+                <div className="ml-auto flex gap-2">
+                  <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                    Annuler
+                  </Button>
+                  <Button type="submit" disabled={loading}>
+                    {loading ? 'Enregistrement…' : 'Enregistrer'}
+                  </Button>
+                </div>
               </div>
             </form>
           </div>

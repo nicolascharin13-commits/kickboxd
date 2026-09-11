@@ -4,7 +4,12 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { createClient } from '@/lib/supabase/server'
-import { getProfileByUsername, isFollowing, getProfileRecentReviews } from '@/lib/queries'
+import {
+  getProfileByUsername,
+  isFollowing,
+  getProfileRecentReviews,
+  getDiaryEntries,
+} from '@/lib/queries'
 import { FollowButton } from '@/components/kickbox/FollowButton'
 import { RatingStars } from '@/components/kickbox/RatingStars'
 import { ProfileNav } from '@/components/kickbox/ProfileNav'
@@ -44,6 +49,7 @@ export default async function ProfilePage({ params }: Props) {
   const following = user && !isOwnProfile ? await isFollowing(user.id, profile.id) : false
 
   const recentReviews = await getProfileRecentReviews(profile.id)
+  const recentDiary = await getDiaryEntries(profile.id, { limit: 4 })
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -109,82 +115,108 @@ export default async function ProfilePage({ params }: Props) {
 
       <ProfileNav username={username} active="profil" />
 
-      {/* Reviews récentes */}
+      {/* Matchs récents du journal */}
       <section>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold">Reviews récentes</h2>
+          <h2 className="text-sm font-semibold">Matchs récents</h2>
           <Link
-            href={`/${username}/reviews`}
+            href={`/${username}/diary`}
             className="text-muted-foreground hover:text-foreground text-xs"
           >
             Tout voir →
           </Link>
         </div>
 
-        {recentReviews.length === 0 ? (
+        {recentDiary.length === 0 ? (
           <div className="border-border rounded-lg border border-dashed p-8 text-center">
-            <p className="text-muted-foreground text-sm">Aucune review pour l&apos;instant.</p>
+            <p className="text-muted-foreground text-sm">Aucun match loggé pour l&apos;instant.</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
-            {recentReviews.map((review) => {
-              const match = review.match as unknown as Match
+          <div className="flex flex-col gap-3">
+            {recentDiary.map((entry) => {
+              const match = entry.match as unknown as Match
               const homeTeam = match?.home_team
               const awayTeam = match?.away_team
-              const matchLabel =
-                homeTeam && awayTeam
-                  ? `${homeTeam.short_name ?? homeTeam.name} vs ${awayTeam.short_name ?? awayTeam.name}`
-                  : 'Match inconnu'
-
+              const review = entry.review as { content: string; rating: number } | null
               return (
-                <div key={review.id} className="border-border rounded-lg border p-4">
-                  <div className="mb-2 flex items-start justify-between gap-2">
-                    <div>
-                      <Link
-                        href={`/matches/${match?.id}`}
-                        className="hover:text-primary text-sm font-medium hover:underline"
-                      >
-                        {matchLabel}
-                      </Link>
+                <Link
+                  key={entry.id}
+                  href={`/matches/${match?.id}`}
+                  className="border-border bg-card hover:bg-muted/40 block rounded-lg border p-4 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">
+                        {homeTeam && awayTeam
+                          ? `${homeTeam.short_name ?? homeTeam.name} vs ${awayTeam.short_name ?? awayTeam.name}`
+                          : 'Match inconnu'}
+                      </p>
                       {match?.competition && (
                         <p className="text-muted-foreground text-xs">
                           {(match.competition as { name: string }).name}
                         </p>
                       )}
                     </div>
-                    <div className="flex flex-col items-end gap-1">
-                      {review.rating && <RatingStars value={review.rating} readOnly size="sm" />}
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      {entry.rating && <RatingStars value={entry.rating} readOnly size="sm" />}
                       <span className="text-muted-foreground text-xs">
-                        {format(new Date(review.created_at), 'd MMM yyyy', { locale: fr })}
+                        {format(new Date(entry.watched_on), 'd MMM yyyy', { locale: fr })}
                       </span>
                     </div>
                   </div>
-                  {review.contains_spoilers ? (
-                    <details>
-                      <summary className="text-muted-foreground cursor-pointer text-xs">
-                        Contient des spoilers — cliquer pour afficher
-                      </summary>
-                      <p className="mt-2 text-sm leading-relaxed">{review.content}</p>
-                    </details>
-                  ) : (
-                    <p className="line-clamp-3 text-sm leading-relaxed">{review.content}</p>
+                  {review?.content && (
+                    <p className="text-muted-foreground mt-2 line-clamp-2 text-xs">
+                      &ldquo;{review.content}&rdquo;
+                    </p>
                   )}
-                </div>
+                </Link>
               )
             })}
           </div>
         )}
       </section>
 
-      {/* Lien vers journal */}
-      {profile.matches_logged_count > 0 && (
+      {/* Reviews récentes */}
+      {recentReviews.length > 0 && (
+        <section className="mt-8">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-sm font-semibold">Reviews récentes</h2>
+            <Link
+              href={`/${username}/reviews`}
+              className="text-muted-foreground hover:text-foreground text-xs"
+            >
+              Tout voir →
+            </Link>
+          </div>
+          <div className="flex flex-col gap-3">
+            {recentReviews.map((review) => {
+              const match = review.match as unknown as Match
+              return (
+                <Link
+                  key={review.id}
+                  href={`/matches/${match?.id}`}
+                  className="border-border bg-card hover:bg-muted/40 block rounded-lg border p-4 transition-colors"
+                >
+                  <div className="mb-2 flex items-start justify-between gap-2">
+                    <p className="text-sm font-medium">
+                      {match?.home_team && match?.away_team
+                        ? `${match.home_team.short_name ?? match.home_team.name} vs ${match.away_team.short_name ?? match.away_team.name}`
+                        : 'Match inconnu'}
+                    </p>
+                    {review.rating && <RatingStars value={review.rating} readOnly size="sm" />}
+                  </div>
+                  <p className="text-muted-foreground line-clamp-2 text-xs">{review.content}</p>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {profile.matches_logged_count > 0 && false && (
         <section className="mt-8">
           <div className="border-border rounded-lg border p-4 text-center">
-            <p className="text-muted-foreground text-sm">
-              {isOwnProfile ? 'Vous avez' : `${profile.display_name ?? profile.username} a`} vu{' '}
-              <strong>{profile.matches_logged_count}</strong> match
-              {profile.matches_logged_count !== 1 ? 's' : ''}.
-            </p>
+            <p className="text-muted-foreground text-sm" />
             <Link
               href={`/${username}/diary`}
               className="text-primary mt-1 block text-sm hover:underline"
