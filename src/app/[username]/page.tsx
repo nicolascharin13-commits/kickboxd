@@ -18,13 +18,13 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { username } = await params
   const profile = await getProfileByUsername(username)
-  if (!profile) return { title: 'Profil — Kickbox' }
+  if (!profile) return { title: 'Profil — Kickboxd' }
   const name = profile.display_name ?? profile.username
   return {
     title: `${name} (@${profile.username})`,
-    description: profile.bio ?? `${profile.matches_logged_count} matchs sur Kickbox`,
+    description: profile.bio ?? `${profile.matches_logged_count} matchs sur Kickboxd`,
     openGraph: {
-      title: `${name} sur Kickbox`,
+      title: `${name} sur Kickboxd`,
       description: profile.bio ?? `${profile.matches_logged_count} matchs loggés`,
     },
   }

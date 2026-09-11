@@ -21,11 +21,11 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: { default: 'Kickbox', template: '%s — Kickbox' },
+  title: { default: 'Kickboxd', template: '%s — Kickboxd' },
   description: 'Le tracker de matchs de football. Note, commente, partage.',
   icons: { icon: '/favicon.svg', shortcut: '/favicon.svg' },
   openGraph: {
-    siteName: 'Kickbox',
+    siteName: 'Kickboxd',
     locale: 'fr_FR',
     type: 'website',
   },
@@ -37,11 +37,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="fr"
-      className={`${inter.variable} ${spaceGrotesk.variable} dark h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col">
+    <html lang="fr" className={`${inter.variable} ${spaceGrotesk.variable} dark antialiased`}>
+      <body className="flex min-h-screen flex-col">
         <Navbar />
         <div className="flex-1 pb-14 sm:pb-0">{children}</div>
         <Footer />

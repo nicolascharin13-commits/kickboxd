@@ -56,7 +56,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="font-display text-2xl">Connexion</CardTitle>
-          <CardDescription>Bon retour sur Kickbox</CardDescription>
+          <CardDescription>Bon retour sur Kickboxd</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           {/* Google OAuth */}

@@ -77,16 +77,29 @@ export async function getCompetitionSeasons(competitionId: number): Promise<stri
 
 export async function getCompetitionMatches(competitionId: number, season?: string) {
   const supabase = await createClient()
-  let query = supabase
+
+  // Matchs passés (500 plus récents)
+  let pastQuery = supabase
     .from('matches')
     .select(MATCH_SELECT)
     .eq('competition_id', competitionId)
+    .eq('status', 'finished')
     .order('kickoff', { ascending: false })
+  if (season) pastQuery = pastQuery.eq('season', season)
+  const { data: past } = await pastQuery.limit(500)
 
-  if (season) query = query.eq('season', season)
+  // Matchs à venir (tous, sans limite)
+  let futureQuery = supabase
+    .from('matches')
+    .select(MATCH_SELECT)
+    .eq('competition_id', competitionId)
+    .neq('status', 'finished')
+    .gte('kickoff', new Date().toISOString())
+    .order('kickoff', { ascending: true })
+  if (season) futureQuery = futureQuery.eq('season', season)
+  const { data: future } = await futureQuery.limit(500)
 
-  const { data } = await query.limit(500)
-  return data ?? []
+  return [...(past ?? []), ...(future ?? [])]
 }
 
 export async function getCompetitions() {

@@ -28,7 +28,7 @@ export async function Navbar() {
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="font-display text-primary text-xl font-bold">
-          Kickbox
+          Kickboxd
         </Link>
 
         {/* Nav principale */}

@@ -14,10 +14,10 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const competition = await getCompetition(Number(id))
-  if (!competition) return { title: 'Compétition — Kickbox' }
+  if (!competition) return { title: 'Compétition — Kickboxd' }
   return {
     title: competition.name,
-    description: `Tous les matchs de ${competition.name}${competition.country ? ` (${competition.country})` : ''} sur Kickbox`,
+    description: `Tous les matchs de ${competition.name}${competition.country ? ` (${competition.country})` : ''} sur Kickboxd`,
   }
 }
 
@@ -65,9 +65,10 @@ export default async function CompetitionPage({ params, searchParams }: Props) {
   const totalPages = Math.ceil(sortedGroups.length / PAGE_SIZE)
   const paginatedGroups = sortedGroups.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
-  // À venir : du plus proche au plus lointain
+  // À venir : du plus proche au plus lointain (filtre par date + status non terminé)
+  const now = new Date()
   const upcoming = filtered
-    .filter((m) => m.status === 'scheduled')
+    .filter((m) => m.status !== 'finished' && new Date(m.kickoff) > now)
     .sort((a, b) => new Date(a.kickoff).getTime() - new Date(b.kickoff).getTime())
     .slice(0, 30)
 

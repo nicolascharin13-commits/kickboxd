@@ -31,7 +31,7 @@ export function LogMatchModal({
   const [rating, setRating] = useState<number | null>(existingRating ?? null)
   const [watchedOn, setWatchedOn] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [reviewContent, setReviewContent] = useState('')
-  const [containsSpoilers, setContainsSpoilers] = useState(false)
+
   const [isRewatch, setIsRewatch] = useState(false)
 
   const panelRef = useRef<HTMLDivElement>(null)
@@ -66,7 +66,7 @@ export function LogMatchModal({
       rating,
       isRewatch,
       reviewContent,
-      containsSpoilers,
+      containsSpoilers: false,
     })
 
     setLoading(false)
@@ -173,14 +173,6 @@ export function LogMatchModal({
 
               {/* Options */}
               <div className="flex flex-col gap-2">
-                <label className="flex cursor-pointer items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={containsSpoilers}
-                    onChange={(e) => setContainsSpoilers(e.target.checked)}
-                  />
-                  Ma review contient des spoilers
-                </label>
                 {isLogged && (
                   <label className="flex cursor-pointer items-center gap-2 text-sm">
                     <input

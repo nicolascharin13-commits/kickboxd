@@ -21,7 +21,7 @@ export default function TermsPage() {
           <h2 className="mb-3 text-base font-semibold">Mentions légales</h2>
           <div className="text-muted-foreground space-y-1">
             <p>
-              <strong className="text-foreground">Nom du service :</strong> Kickbox
+              <strong className="text-foreground">Nom du service :</strong> Kickboxd
             </p>
             <p>
               <strong className="text-foreground">Nature :</strong> Service web de tracking de
@@ -46,7 +46,7 @@ export default function TermsPage() {
         <section>
           <h2 className="mb-3 text-base font-semibold">1. Objet</h2>
           <p className="text-muted-foreground">
-            Kickbox est une plateforme permettant aux utilisateurs de logger, noter et partager les
+            Kickboxd est une plateforme permettant aux utilisateurs de logger, noter et partager les
             matchs de football qu&apos;ils ont regardés. En créant un compte, vous acceptez les
             présentes conditions d&apos;utilisation dans leur intégralité.
           </p>
@@ -87,7 +87,7 @@ export default function TermsPage() {
         <section>
           <h2 className="mb-3 text-base font-semibold">5. Propriété intellectuelle</h2>
           <p className="text-muted-foreground">
-            Le code source, le design et la marque Kickbox sont protégés. Les données de matchs
+            Le code source, le design et la marque Kickboxd sont protégés. Les données de matchs
             proviennent de sources tierces (football-data.org, API-Football) soumises à leurs
             propres licences. Vos reviews et contenus vous appartiennent ; en les publiant, vous
             nous accordez une licence non-exclusive d&apos;affichage sur la plateforme.
@@ -97,7 +97,7 @@ export default function TermsPage() {
         <section>
           <h2 className="mb-3 text-base font-semibold">6. Disponibilité</h2>
           <p className="text-muted-foreground">
-            Kickbox est fourni &quot;en l&apos;état&quot;, sans garantie de disponibilité continue.
+            Kickboxd est fourni &quot;en l&apos;état&quot;, sans garantie de disponibilité continue.
             Nous nous réservons le droit de modifier, suspendre ou interrompre le service à tout
             moment, sans préavis. Nous ne sommes pas responsables des pertes de données liées à une
             interruption de service.
@@ -107,9 +107,9 @@ export default function TermsPage() {
         <section>
           <h2 className="mb-3 text-base font-semibold">7. Limitation de responsabilité</h2>
           <p className="text-muted-foreground">
-            Kickbox ne saurait être tenu responsable des dommages directs ou indirects résultant de
+            Kickboxd ne saurait être tenu responsable des dommages directs ou indirects résultant de
             l&apos;utilisation ou de l&apos;impossibilité d&apos;utiliser le service. Vous utilisez
-            Kickbox à vos propres risques.
+            Kickboxd à vos propres risques.
           </p>
         </section>
 

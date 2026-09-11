@@ -14,10 +14,10 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const team = await getTeam(Number(id))
-  if (!team) return { title: 'Équipe — Kickbox' }
+  if (!team) return { title: 'Équipe — Kickboxd' }
   return {
     title: team.name,
-    description: `Matchs de ${team.name}${team.country ? ` (${team.country})` : ''} sur Kickbox`,
+    description: `Matchs de ${team.name}${team.country ? ` (${team.country})` : ''} sur Kickboxd`,
   }
 }
 

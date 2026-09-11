@@ -28,7 +28,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const raw = await getMatch(Number(id))
-  if (!raw) return { title: 'Match — Kickbox' }
+  if (!raw) return { title: 'Match — Kickboxd' }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const match = raw as any
   const homeTeam = Array.isArray(match.home_team) ? match.home_team[0] : match.home_team

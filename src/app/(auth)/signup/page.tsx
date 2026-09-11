@@ -105,7 +105,7 @@ export default function SignupPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="font-display text-2xl">Créer un compte</CardTitle>
-          <CardDescription>Rejoins la communauté Kickbox</CardDescription>
+          <CardDescription>Rejoins la communauté Kickboxd</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <Button variant="outline" className="w-full" onClick={signInWithGoogle} type="button">

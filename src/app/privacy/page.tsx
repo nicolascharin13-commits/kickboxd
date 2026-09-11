@@ -17,7 +17,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="mb-3 text-base font-semibold">1. Responsable du traitement</h2>
           <p className="text-muted-foreground">
-            Kickbox est un service exploité à titre personnel. Pour toute question relative à vos
+            Kickboxd est un service exploité à titre personnel. Pour toute question relative à vos
             données personnelles, contactez-nous à :{' '}
             <a href="mailto:contact@kickbox.app" className="text-foreground underline">
               contact@kickbox.app
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="mb-3 text-base font-semibold">3. Finalités du traitement</h2>
           <ul className="text-muted-foreground list-inside list-disc space-y-1">
-            <li>Fourniture et amélioration du service Kickbox</li>
+            <li>Fourniture et amélioration du service Kickboxd</li>
             <li>Gestion de votre compte et authentification</li>
             <li>Affichage de votre profil public et de votre activité</li>
             <li>Notifications liées à votre activité sur la plateforme</li>
@@ -146,7 +146,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="mb-3 text-base font-semibold">8. Cookies</h2>
           <p className="text-muted-foreground">
-            Kickbox utilise uniquement des cookies strictement nécessaires au fonctionnement du
+            Kickboxd utilise uniquement des cookies strictement nécessaires au fonctionnement du
             service (gestion de session d&apos;authentification). Aucun cookie publicitaire ou de
             tracking n&apos;est utilisé.
           </p>

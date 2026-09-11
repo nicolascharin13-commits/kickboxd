@@ -29,7 +29,7 @@ export default async function DiscoverPage() {
       {/* Onboarding — visible uniquement pour les nouveaux utilisateurs */}
       {isNewUser && (
         <div className="border-primary/20 bg-primary/5 mb-8 rounded-xl border p-5">
-          <h2 className="font-display mb-1 text-lg font-bold">Bienvenue sur Kickbox 👋</h2>
+          <h2 className="font-display mb-1 text-lg font-bold">Bienvenue sur Kickboxd 👋</h2>
           <p className="text-muted-foreground mb-4 text-sm">
             Commence par logger les matchs que tu as regardés, découvrir la communauté, ou ajouter
             des matchs à ta watchlist.

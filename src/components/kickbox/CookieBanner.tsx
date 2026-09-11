@@ -23,7 +23,7 @@ export function CookieBanner() {
     <div className="border-border bg-card fixed right-0 bottom-14 left-0 z-[60] border-t px-4 py-3 sm:bottom-0">
       <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <p className="text-muted-foreground text-xs leading-relaxed">
-          Kickbox utilise des cookies strictement nécessaires au fonctionnement du service (session
+          Kickboxd utilise des cookies strictement nécessaires au fonctionnement du service (session
           d&apos;authentification). Aucun cookie publicitaire.{' '}
           <Link href="/privacy" className="text-foreground underline underline-offset-2">
             En savoir plus
