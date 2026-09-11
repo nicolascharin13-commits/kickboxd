@@ -109,7 +109,11 @@ export default async function ReviewsPage({ params, searchParams }: Props) {
                   <div className="mb-2 flex items-center gap-2">
                     {review.rating && <RatingStars value={review.rating} readOnly size="sm" />}
                     <span className="text-muted-foreground text-xs">
-                      {format(new Date(review.created_at), 'd MMM yyyy', { locale: fr })}
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      {(review as any).diary_entry?.watched_on
+                        ? /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+                          `Vu le ${format(new Date((review as any).diary_entry.watched_on), 'd MMM yyyy', { locale: fr })}`
+                        : format(new Date(review.created_at), 'd MMM yyyy', { locale: fr })}
                     </span>
                   </div>
                   <p className="line-clamp-4 text-sm leading-relaxed whitespace-pre-wrap">

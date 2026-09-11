@@ -96,14 +96,6 @@ export default async function DiaryPage({ params, searchParams }: Props) {
                             {entry.rating && (
                               <RatingStars value={entry.rating} readOnly size="sm" />
                             )}
-                            {entry.review && (
-                              <Link
-                                href={`/matches/${match.id}`}
-                                className="text-primary text-xs hover:underline"
-                              >
-                                Voir ma review →
-                              </Link>
-                            )}
                           </div>
                           {isOwnProfile && (
                             <form action={deleteAction}>
@@ -116,6 +108,13 @@ export default async function DiaryPage({ params, searchParams }: Props) {
                             </form>
                           )}
                         </div>
+                        {entry.review && (entry.review as { content: string }).content && (
+                          <Link href={`/matches/${match.id}`} className="block px-1">
+                            <p className="text-muted-foreground hover:text-foreground line-clamp-2 text-xs leading-relaxed transition-colors">
+                              &ldquo;{(entry.review as { content: string }).content}&rdquo;
+                            </p>
+                          </Link>
+                        )}
                       </div>
                     )
                   })}

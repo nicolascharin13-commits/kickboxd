@@ -208,7 +208,8 @@ export async function getUserReviews(userId: string, { limit = 20, offset = 0 } 
         home_team:teams!matches_home_team_id_fkey(id, name, short_name, logo_url),
         away_team:teams!matches_away_team_id_fkey(id, name, short_name, logo_url),
         competition:competitions(id, name)
-      )
+      ),
+      diary_entry:diary_entries!diary_entries_review_id_fkey(watched_on, is_rewatch)
     `
     )
     .eq('user_id', userId)
