@@ -29,29 +29,52 @@ export default async function DiscoverPage() {
       {/* Onboarding — visible uniquement pour les nouveaux utilisateurs */}
       {isNewUser && (
         <div className="border-primary/20 bg-primary/5 mb-8 rounded-xl border p-5">
-          <h2 className="font-display mb-1 text-lg font-bold">Bienvenue sur Kickboxd 👋</h2>
-          <p className="text-muted-foreground mb-4 text-sm">
-            Commence par logger les matchs que tu as regardés, découvrir la communauté, ou ajouter
-            des matchs à ta watchlist.
+          <h2 className="font-display mb-1 text-lg font-bold">Bienvenue sur Kickboxd ⚽</h2>
+          <p className="text-muted-foreground mb-5 text-sm">
+            Kickboxd c&apos;est Letterboxd pour le foot — tu loggues les matchs que tu regardes, tu
+            les notes, tu suis tes amis.
           </p>
+          <div className="mb-4 flex flex-col gap-3">
+            <div className="flex items-start gap-3">
+              <span className="text-lg">1️⃣</span>
+              <div>
+                <p className="text-sm font-medium">Recherche un match que tu as regardé</p>
+                <p className="text-muted-foreground text-xs">
+                  Par équipe : &quot;PSG&quot;, &quot;Real Madrid&quot;...
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-lg">2️⃣</span>
+              <div>
+                <p className="text-sm font-medium">Note-le et écris une review</p>
+                <p className="text-muted-foreground text-xs">
+                  Il apparaît dans ton journal et sur ton profil
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-lg">3️⃣</span>
+              <div>
+                <p className="text-sm font-medium">Suis tes amis</p>
+                <p className="text-muted-foreground text-xs">
+                  Vois ce qu&apos;ils regardent dans le fil d&apos;activité
+                </p>
+              </div>
+            </div>
+          </div>
           <div className="flex flex-wrap gap-2">
             <Link
               href="/search"
               className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium transition-colors"
             >
-              Rechercher un match →
+              Logger mon premier match →
             </Link>
             <Link
               href="/community"
               className="border-border hover:bg-muted rounded-md border px-4 py-2 text-sm font-medium transition-colors"
             >
-              Découvrir des membres
-            </Link>
-            <Link
-              href="/competitions"
-              className="border-border hover:bg-muted rounded-md border px-4 py-2 text-sm font-medium transition-colors"
-            >
-              Parcourir les compétitions
+              Trouver des amis
             </Link>
           </div>
         </div>

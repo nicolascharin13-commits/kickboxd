@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'com.kickofboxd.app',
-  appName: 'Kick-of Boxd',
+  appName: 'Kickboxd',
   webDir: 'out',
   server: {
     url: 'https://kick-box.vercel.app',

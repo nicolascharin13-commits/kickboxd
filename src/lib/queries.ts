@@ -111,12 +111,11 @@ export async function getCompetitions() {
 export async function searchMatches(q: string, limit = 20) {
   const supabase = await createClient()
 
-  // Supabase ne supporte pas le filtre .or() sur des colonnes jointes.
-  // On cherche d'abord les équipes par nom, puis les matchs par leurs IDs.
+  // Cherche par nom complet ET nom court
   const { data: teams } = await supabase
     .from('teams')
     .select('id')
-    .ilike('name', `%${q}%`)
+    .or(`name.ilike.%${q}%,short_name.ilike.%${q}%`)
     .limit(50)
 
   const teamIds = (teams ?? []).map((t) => t.id)

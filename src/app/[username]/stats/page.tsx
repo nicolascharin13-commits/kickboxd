@@ -80,8 +80,18 @@ export default async function StatsPage({ params }: Props) {
       <ProfileNav username={username} active="stats" />
 
       {allEntries.length === 0 ? (
-        <div className="border-border rounded-lg border border-dashed p-8 text-center">
-          <p className="text-muted-foreground text-sm">Aucun match loggé pour l&apos;instant.</p>
+        <div className="border-border rounded-lg border border-dashed p-12 text-center">
+          <p className="mb-3 text-4xl">📊</p>
+          <p className="mb-1 font-medium">Pas encore de stats</p>
+          <p className="text-muted-foreground mb-4 text-sm">
+            Logge tes premiers matchs pour voir tes statistiques apparaître ici.
+          </p>
+          <Link
+            href="/search"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium transition-colors"
+          >
+            Rechercher un match →
+          </Link>
         </div>
       ) : (
         <div className="flex flex-col gap-8">
