@@ -132,7 +132,7 @@ export async function deleteReview(reviewId: string) {
     .eq('user_id', user.id)
 
   if (error) return { error: error.message }
-  revalidatePath('/[username]/reviews', 'page')
+  revalidatePath('/', 'layout')
   return { success: true }
 }
 

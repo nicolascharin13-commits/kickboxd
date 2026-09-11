@@ -22,6 +22,7 @@ export function ReviewCard({ review, currentUserId, initialLiked = false }: Revi
   const router = useRouter()
   const [revealed, setRevealed] = useState(!review.contains_spoilers)
   const [deleting, setDeleting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
   const [editContent, setEditContent] = useState(review.content)
@@ -31,7 +32,6 @@ export function ReviewCard({ review, currentUserId, initialLiked = false }: Revi
   const profile = review.profile
 
   async function handleDelete() {
-    if (!confirm('Supprimer cette review ?')) return
     setDeleting(true)
     await deleteReview(review.id)
     router.refresh()
@@ -77,14 +77,31 @@ export function ReviewCard({ review, currentUserId, initialLiked = false }: Revi
               >
                 <Pencil className="h-3.5 w-3.5" />
               </button>
-              <button
-                onClick={handleDelete}
-                disabled={deleting}
-                className="text-muted-foreground hover:text-destructive transition-colors"
-                aria-label="Supprimer la review"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
+              {confirmDelete ? (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="text-destructive text-xs font-medium"
+                  >
+                    {deleting ? '…' : 'Confirmer'}
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(false)}
+                    className="text-muted-foreground text-xs"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  className="text-muted-foreground hover:text-destructive transition-colors"
+                  aria-label="Supprimer la review"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              )}
             </>
           )}
         </div>
