@@ -84,12 +84,32 @@ export async function syncLiveMatches() {
   const provider = getMatchProvider()
 
   try {
-    const matches = await provider.getLiveMatches()
-    if (matches.length > 0) {
-      await updateMatchScores(supabase, matches)
+    const liveFromApi = await provider.getLiveMatches()
+    const liveApiIds = new Set(liveFromApi.map((m) => m.apiId))
+
+    // Mettre à jour les matchs effectivement en direct
+    if (liveFromApi.length > 0) {
+      await updateMatchScores(supabase, liveFromApi)
     }
-    await logSync(supabase, '/matches?status=IN_PLAY', 200, matches.length)
-    return { updated: matches.length }
+
+    // Fermer les matchs orphelins : status=live en DB mais absents de l'API
+    const { data: liveInDb } = await supabase
+      .from('matches')
+      .select('id, api_id, kickoff')
+      .eq('status', 'live')
+
+    const orphans = (liveInDb ?? []).filter((m: { api_id: number }) => !liveApiIds.has(m.api_id))
+
+    if (orphans.length > 0) {
+      const orphanIds = orphans.map((m: { id: number }) => m.id)
+      await supabase
+        .from('matches')
+        .update({ status: 'finished', updated_at: new Date().toISOString() })
+        .in('id', orphanIds)
+    }
+
+    await logSync(supabase, '/matches?status=IN_PLAY', 200, liveFromApi.length)
+    return { updated: liveFromApi.length, closed: orphans.length }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     await logSync(supabase, '/matches/live', 500, 0, message)
