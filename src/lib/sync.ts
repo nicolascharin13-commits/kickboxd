@@ -64,7 +64,7 @@ export async function syncRecentMatches() {
   const supabase = getServiceClient()
   const provider = getMatchProvider()
 
-  const yesterday = formatDate(new Date(Date.now() - 86400000))
+  const yesterday = formatDate(new Date(Date.now() - 7 * 86400000))
   const today = formatDate(new Date())
 
   try {
