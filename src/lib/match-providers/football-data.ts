@@ -109,6 +109,11 @@ export class FootballDataProvider implements MatchDataProvider {
       return null
     }
   }
+
+  async getLiveMatches(): Promise<NormalizedMatch[]> {
+    const data = await this.get<{ matches: RawMatch[] }>('/matches?status=IN_PLAY')
+    return data.matches.map(mapRawMatch)
+  }
 }
 
 // Types bruts de l'API

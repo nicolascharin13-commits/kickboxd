@@ -17,6 +17,7 @@ import { AddToListButton } from '@/components/kickbox/AddToListButton'
 import { ShareButton } from '@/components/kickbox/ShareButton'
 import { CommentSection } from '@/components/kickbox/CommentSection'
 import { Badge } from '@/components/ui/badge'
+import { LiveMatchScore } from '@/components/kickbox/LiveMatchScore'
 import type { Match, Review, MatchGoal, MatchBooking, MatchSubstitution } from '@/lib/types'
 
 export const revalidate = 60
@@ -232,22 +233,31 @@ export default async function MatchPage({ params }: Props) {
           </div>
 
           <div className="flex shrink-0 flex-col items-center gap-1">
-            <ScoreDisplay
-              homeScore={match.home_score}
-              awayScore={match.away_score}
-              status={match.status}
-              kickoff={match.kickoff}
-              size="lg"
-            />
-            {match.status === 'finished' &&
-              match.home_score_ht !== null &&
-              match.away_score_ht !== null && (
-                <span className="text-muted-foreground text-xs">
-                  ({match.home_score_ht} – {match.away_score_ht}) mi-temps
-                </span>
-              )}
-            {match.status === 'live' && (
-              <Badge className="bg-primary text-primary-foreground text-[10px]">EN DIRECT</Badge>
+            {match.status === 'live' ? (
+              <LiveMatchScore
+                matchId={match.id}
+                initialHomeScore={match.home_score}
+                initialAwayScore={match.away_score}
+                initialStatus={match.status}
+                kickoff={match.kickoff}
+              />
+            ) : (
+              <>
+                <ScoreDisplay
+                  homeScore={match.home_score}
+                  awayScore={match.away_score}
+                  status={match.status}
+                  kickoff={match.kickoff}
+                  size="lg"
+                />
+                {match.status === 'finished' &&
+                  match.home_score_ht !== null &&
+                  match.away_score_ht !== null && (
+                    <span className="text-muted-foreground text-xs">
+                      ({match.home_score_ht} – {match.away_score_ht}) mi-temps
+                    </span>
+                  )}
+              </>
             )}
           </div>
 

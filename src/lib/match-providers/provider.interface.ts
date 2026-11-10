@@ -6,4 +6,5 @@ export interface MatchDataProvider {
   getMatches(competitionCode: string, season: string): Promise<NormalizedMatch[]>
   getMatchesByDateRange(dateFrom: string, dateTo: string): Promise<NormalizedMatch[]>
   getMatch(apiId: number): Promise<NormalizedMatch | null>
+  getLiveMatches(): Promise<NormalizedMatch[]>
 }

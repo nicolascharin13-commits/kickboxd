@@ -35,6 +35,16 @@ export async function getUpcomingMatches(limit = 20) {
   return data ?? []
 }
 
+export async function getLiveMatches() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('matches')
+    .select(MATCH_SELECT)
+    .eq('status', 'live')
+    .order('kickoff', { ascending: true })
+  return data ?? []
+}
+
 export async function getMatch(id: number) {
   const supabase = await createClient()
   const { data } = await supabase.from('matches').select(MATCH_SELECT).eq('id', id).single()

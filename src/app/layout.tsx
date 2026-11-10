@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Space_Grotesk } from 'next/font/google'
 import { Navbar } from '@/components/kickbox/Navbar'
-import { MobileNav } from '@/components/kickbox/MobileNav'
+import { MobileNavServer } from '@/components/kickbox/MobileNavServer'
 import { Footer } from '@/components/kickbox/Footer'
 import { CookieBanner } from '@/components/kickbox/CookieBanner'
 import './globals.css'
@@ -42,7 +42,7 @@ export default function RootLayout({
         <Navbar />
         <div className="flex-1 pb-14 sm:pb-0">{children}</div>
         <Footer />
-        <MobileNav />
+        <MobileNavServer />
         <CookieBanner />
       </body>
     </html>

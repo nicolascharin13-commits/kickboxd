@@ -79,6 +79,24 @@ export async function syncRecentMatches() {
   }
 }
 
+export async function syncLiveMatches() {
+  const supabase = getServiceClient()
+  const provider = getMatchProvider()
+
+  try {
+    const matches = await provider.getLiveMatches()
+    if (matches.length > 0) {
+      await updateMatchScores(supabase, matches)
+    }
+    await logSync(supabase, '/matches?status=IN_PLAY', 200, matches.length)
+    return { updated: matches.length }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    await logSync(supabase, '/matches/live', 500, 0, message)
+    throw err
+  }
+}
+
 export async function syncUpcomingMatches() {
   const supabase = getServiceClient()
   const provider = getMatchProvider()

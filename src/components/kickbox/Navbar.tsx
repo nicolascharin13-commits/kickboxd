@@ -1,10 +1,10 @@
 import Link from 'next/link'
-import { Bell } from 'lucide-react'
+import { Bell, Search, Radio } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { getUnreadNotificationsCount } from '@/lib/queries'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { LogoutButton } from './LogoutButton'
+import { UserDropdown } from './UserDropdown'
 
 export async function Navbar() {
   const supabase = await createClient()
@@ -40,16 +40,17 @@ export async function Navbar() {
             Découvrir
           </Link>
           <Link
+            href="/live"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors"
+          >
+            <Radio className="h-3.5 w-3.5" />
+            Live
+          </Link>
+          <Link
             href="/competitions"
             className="text-muted-foreground hover:text-foreground rounded-md px-3 py-1.5 text-sm transition-colors"
           >
             Compétitions
-          </Link>
-          <Link
-            href="/search"
-            className="text-muted-foreground hover:text-foreground rounded-md px-3 py-1.5 text-sm transition-colors"
-          >
-            Recherche
           </Link>
           <Link
             href="/community"
@@ -57,18 +58,18 @@ export async function Navbar() {
           >
             Communauté
           </Link>
-          {user && (
-            <Link
-              href="/activity"
-              className="text-muted-foreground hover:text-foreground rounded-md px-3 py-1.5 text-sm transition-colors"
-            >
-              Activité
-            </Link>
-          )}
         </nav>
 
-        {/* Auth */}
-        <div className="flex items-center gap-2">
+        {/* Actions droite */}
+        <div className="flex items-center gap-1">
+          <Link
+            href="/search"
+            className="text-muted-foreground hover:text-foreground rounded-md p-1.5 transition-colors"
+            aria-label="Recherche"
+          >
+            <Search className="h-4 w-4" />
+          </Link>
+
           {user && profile ? (
             <>
               <Link
@@ -83,29 +84,17 @@ export async function Navbar() {
                   </span>
                 )}
               </Link>
-              <Link
-                href={`/${profile.username}`}
-                className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
-              >
-                @{profile.username}
-              </Link>
-              <Link
-                href="/settings"
-                className="text-muted-foreground hover:text-foreground rounded-md px-3 py-1.5 text-sm transition-colors"
-              >
-                Paramètres
-              </Link>
-              <LogoutButton />
+              <UserDropdown username={profile.username} />
             </>
           ) : (
-            <>
+            <div className="flex items-center gap-2 pl-1">
               <Link href="/login" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}>
                 Connexion
               </Link>
               <Link href="/signup" className={cn(buttonVariants({ size: 'sm' }))}>
                 S&apos;inscrire
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>
