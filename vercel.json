@@ -10,7 +10,7 @@
     },
     {
       "path": "/api/cron/sync-competitions",
-      "schedule": "0 5 * * 1"
+      "schedule": "0 5 * * 1,4"
     },
     {
       "path": "/api/cron/keepalive",
