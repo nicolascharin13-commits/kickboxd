@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { MatchCard } from '@/components/kickbox/MatchCard'
 import { TeamBadge } from '@/components/kickbox/TeamBadge'
 import { Input } from '@/components/ui/input'
 import { UserAvatar } from '@/components/kickbox/UserAvatar'
-import type { Match, Team } from '@/lib/types'
+import type { Match, Team, Competition } from '@/lib/types'
 
 const MATCH_SELECT = `
   id, api_id, season, matchday, kickoff, status,
@@ -24,6 +25,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
   let matches: Match[] = []
   let teams: Team[] = []
+  let competitions: Competition[] = []
   let profiles: {
     id: string
     username: string
@@ -43,6 +45,14 @@ export default async function SearchPage({ searchParams }: Props) {
       .order('name')
       .limit(10)
     teams = (teamsData ?? []) as Team[]
+
+    // Chercher les compétitions
+    const { data: competitionsData } = await supabase
+      .from('competitions')
+      .select('*')
+      .ilike('name', `%${query}%`)
+      .limit(5)
+    competitions = (competitionsData ?? []) as Competition[]
 
     // Chercher les matchs via les IDs d'équipes (les filtres sur colonnes jointes ne fonctionnent pas)
     const teamIds = teams.map((t) => t.id)
@@ -66,7 +76,7 @@ export default async function SearchPage({ searchParams }: Props) {
     profiles = profilesData ?? []
   }
 
-  const hasResults = teams.length > 0 || matches.length > 0 || profiles.length > 0
+  const hasResults = teams.length > 0 || matches.length > 0 || profiles.length > 0 || competitions.length > 0
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -115,6 +125,28 @@ export default async function SearchPage({ searchParams }: Props) {
                       <p className="text-muted-foreground text-xs">
                         @{profile.username} · {profile.matches_logged_count} matchs
                       </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Compétitions */}
+          {competitions.length > 0 && (
+            <section className="mb-8">
+              <h2 className="text-muted-foreground mb-3 text-sm font-semibold tracking-wider uppercase">Compétitions</h2>
+              <div className="flex flex-col gap-1">
+                {competitions.map((comp) => (
+                  <Link key={comp.id} href={`/competitions/${comp.id}`}
+                    className="border-border bg-card hover:border-primary/40 flex items-center gap-3 rounded-lg border px-4 py-3 transition-colors"
+                  >
+                    {comp.logo_url && (
+                      <Image src={comp.logo_url} alt={comp.name} width={24} height={24} className="object-contain" unoptimized />
+                    )}
+                    <div>
+                      <p className="text-sm font-medium">{comp.name}</p>
+                      {comp.country && <p className="text-muted-foreground text-xs">{comp.country}</p>}
                     </div>
                   </Link>
                 ))}

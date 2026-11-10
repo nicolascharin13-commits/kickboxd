@@ -81,6 +81,14 @@ export default async function ProfilePage({ params }: Props) {
             {!isOwnProfile && user && (
               <FollowButton targetUserId={profile.id} initialIsFollowing={following} />
             )}
+            {!isOwnProfile && user && (
+              <Link
+                href={`/compare/${username}`}
+                className="border-border text-muted-foreground hover:text-foreground rounded-md border px-2 py-1 text-xs"
+              >
+                Comparer
+              </Link>
+            )}
             {isOwnProfile && (
               <Link
                 href="/settings"

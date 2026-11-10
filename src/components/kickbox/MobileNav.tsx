@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Radio, Search, Users, User } from 'lucide-react'
+import { Home, TrendingUp, Search, Users, User } from 'lucide-react'
 
 interface MobileNavProps {
   username: string | null
@@ -13,7 +13,7 @@ export function MobileNav({ username }: MobileNavProps) {
 
   const navItems = [
     { href: '/discover', label: 'Accueil', icon: Home },
-    { href: '/live', label: 'Live', icon: Radio },
+    { href: '/popular', label: 'Populaire', icon: TrendingUp },
     { href: '/search', label: 'Recherche', icon: Search },
     { href: '/community', label: 'Communauté', icon: Users },
     username

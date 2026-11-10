@@ -7,6 +7,7 @@ const MATCH_SELECT = `
   home_team_id, away_team_id,
   home_score, away_score, home_score_ht, away_score_ht, venue,
   referee, goals, bookings, substitutions, details_fetched_at, api_football_id,
+  avg_rating, ratings_count,
   home_team:teams!matches_home_team_id_fkey(id, name, short_name, logo_url, country),
   away_team:teams!matches_away_team_id_fkey(id, name, short_name, logo_url, country),
   competition:competitions(id, api_id, name, country, logo_url, type)
@@ -412,6 +413,91 @@ export async function getUnreadNotificationsCount(userId: string) {
   } catch {
     return 0
   }
+}
+
+export async function getTopRatedMatches(limit = 20) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('matches')
+    .select(MATCH_SELECT + ', avg_rating, ratings_count')
+    .eq('status', 'finished')
+    .gte('ratings_count', 2)
+    .order('avg_rating', { ascending: false })
+    .order('ratings_count', { ascending: false })
+    .limit(limit)
+  return data ?? []
+}
+
+export async function getTrendingMatches(limit = 20) {
+  const supabase = await createClient()
+  // Matchs terminés dans les 14 derniers jours avec le plus de logs
+  const since = new Date(Date.now() - 14 * 86400000).toISOString()
+  const { data } = await supabase
+    .from('matches')
+    .select(MATCH_SELECT + ', avg_rating, ratings_count')
+    .eq('status', 'finished')
+    .gte('kickoff', since)
+    .gte('ratings_count', 1)
+    .order('ratings_count', { ascending: false })
+    .order('avg_rating', { ascending: false })
+    .limit(limit)
+  return data ?? []
+}
+
+export async function getCommunityRecentReviews(limit = 10) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('reviews')
+    .select(`
+      id, content, rating, contains_spoilers, created_at,
+      profile:profiles(username, display_name, avatar_url),
+      match:matches(
+        id, kickoff, status, home_score, away_score,
+        home_team:teams!matches_home_team_id_fkey(id, name, short_name, logo_url),
+        away_team:teams!matches_away_team_id_fkey(id, name, short_name, logo_url),
+        competition:competitions(id, name)
+      )
+    `)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  return data ?? []
+}
+
+export async function getUserDiaryHeatmap(userId: string) {
+  const supabase = await createClient()
+  // Last 365 days
+  const since = new Date(Date.now() - 365 * 86400000).toISOString().split('T')[0]
+  const { data } = await supabase
+    .from('diary_entries')
+    .select('watched_on')
+    .eq('user_id', userId)
+    .gte('watched_on', since)
+  return data ?? []
+}
+
+export async function compareUsers(userId1: string, userId2: string) {
+  const supabase = await createClient()
+
+  const [{ data: d1 }, { data: d2 }] = await Promise.all([
+    supabase
+      .from('diary_entries')
+      .select('match_id, rating, watched_on, match:matches(id, kickoff, home_score, away_score, home_team:teams!matches_home_team_id_fkey(name, short_name), away_team:teams!matches_away_team_id_fkey(name, short_name), competition:competitions(name))')
+      .eq('user_id', userId1),
+    supabase
+      .from('diary_entries')
+      .select('match_id, rating, watched_on')
+      .eq('user_id', userId2),
+  ])
+
+  const entries1 = d1 ?? []
+  const entries2 = d2 ?? []
+  const ids2 = new Set(entries2.map((e) => e.match_id))
+  const common = entries1.filter((e) => ids2.has(e.match_id))
+
+  const avg1 = entries1.filter(e => e.rating).reduce((s, e) => s + (e.rating as number), 0) / (entries1.filter(e => e.rating).length || 1)
+  const avg2 = entries2.filter(e => e.rating).reduce((s, e) => s + (e.rating as number), 0) / (entries2.filter(e => e.rating).length || 1)
+
+  return { common, total1: entries1.length, total2: entries2.length, avg1, avg2 }
 }
 
 export async function getActivityFeedPaginated(currentUserId: string, page = 1, pageSize = 20) {
