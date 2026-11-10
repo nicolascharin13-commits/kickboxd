@@ -80,6 +80,15 @@ export function MatchCard({ match, variant = 'compact' }: MatchCardProps) {
         </div>
       )}
 
+      {/* Note communauté */}
+      {match.ratings_count != null && match.ratings_count > 0 && match.avg_rating != null && (
+        <div className="mt-1.5 flex items-center gap-1">
+          <span className="text-amber-400 text-xs">★</span>
+          <span className="text-xs font-medium">{Number(match.avg_rating).toFixed(1)}</span>
+          <span className="text-muted-foreground text-xs">({match.ratings_count})</span>
+        </div>
+      )}
+
       {/* Lieu (variant full) */}
       {variant === 'full' && match.venue && (
         <p className="text-muted-foreground mt-2 text-xs">{match.venue}</p>

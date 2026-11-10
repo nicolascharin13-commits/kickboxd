@@ -65,6 +65,8 @@ export interface Match {
   substitutions: MatchSubstitution[]
   details_fetched_at: string | null
   api_football_id: number | null
+  avg_rating?: number | null
+  ratings_count?: number
   // Relations jointes
   home_team?: Team | null
   away_team?: Team | null

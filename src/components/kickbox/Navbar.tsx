@@ -40,6 +40,12 @@ export async function Navbar() {
             Découvrir
           </Link>
           <Link
+            href="/popular"
+            className="text-muted-foreground hover:text-foreground rounded-md px-3 py-1.5 text-sm transition-colors"
+          >
+            Populaire
+          </Link>
+          <Link
             href="/live"
             className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors"
           >

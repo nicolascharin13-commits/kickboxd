@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getProfileByUsername } from '@/lib/queries'
+import { getProfileByUsername, getUserDiaryHeatmap } from '@/lib/queries'
 import { createClient } from '@/lib/supabase/server'
 import { ProfileNav } from '@/components/kickbox/ProfileNav'
+import { ActivityHeatmap } from '@/components/kickbox/ActivityHeatmap'
 
 interface Props {
   params: Promise<{ username: string }>
@@ -14,6 +15,8 @@ export default async function StatsPage({ params }: Props) {
   if (!profile) notFound()
 
   const supabase = await createClient()
+
+  const heatmapData = await getUserDiaryHeatmap(profile.id)
 
   // Stats des diary entries
   const { data: entries } = await supabase
@@ -78,6 +81,12 @@ export default async function StatsPage({ params }: Props) {
       </div>
 
       <ProfileNav username={username} active="stats" />
+
+      {allEntries.length > 0 && (
+        <section className="mb-8">
+          <ActivityHeatmap entries={heatmapData} />
+        </section>
+      )}
 
       {allEntries.length === 0 ? (
         <div className="border-border rounded-lg border border-dashed p-12 text-center">

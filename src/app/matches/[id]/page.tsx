@@ -289,6 +289,27 @@ export default async function MatchPage({ params }: Props) {
         </div>
       </div>
 
+      {/* Stats communauté */}
+      {(match as unknown as { ratings_count: number; avg_rating: number | null }).ratings_count > 0 && (
+        <div className="border-border bg-card mb-4 rounded-xl border p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-400 text-lg">★</span>
+              <span className="font-display text-2xl font-bold">
+                {Number((match as unknown as { avg_rating: number }).avg_rating).toFixed(1)}
+              </span>
+              <span className="text-muted-foreground text-sm">/ 5</span>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-medium">
+                {(match as unknown as { ratings_count: number }).ratings_count} log{(match as unknown as { ratings_count: number }).ratings_count > 1 ? 's' : ''}
+              </p>
+              <p className="text-muted-foreground text-xs">sur Kickboxd</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Infos */}
       <div className="text-muted-foreground mb-6 flex flex-wrap gap-4 text-sm">
         <div className="flex items-center gap-1.5">
