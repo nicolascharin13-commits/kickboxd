@@ -169,9 +169,10 @@ export async function syncExtraCompetitions(): Promise<{ synced: number; request
 
   if (!process.env.API_FOOTBALL_KEY) throw new Error('API_FOOTBALL_KEY non configurée')
 
-  // Fenêtre : hier → J+7 (9 dates = 9 req pour toutes les compétitions confondues)
+  // Fenêtre : J-30 → J+7 (38 req/jour — backfill automatique sur 3-4 jours)
+  // Couvre toute la saison en cours après quelques exécutions quotidiennes
   const dates: string[] = []
-  for (let i = -1; i <= 7; i++) {
+  for (let i = -30; i <= 7; i++) {
     dates.push(formatDate(new Date(Date.now() + i * 86400000)))
   }
 
