@@ -1,34 +1,43 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { createClient } from '@/lib/supabase/server'
 import { getCompetitions } from '@/lib/queries'
 
 export const revalidate = 3600
 
+// Ordre de popularité mondiale (fixe)
+const POPULARITY_ORDER = [
+  'UEFA Champions League',
+  'Premier League',
+  'La Liga',
+  'Bundesliga',
+  'Serie A',
+  'Ligue 1',
+  'UEFA Europa League',
+  'UEFA Conference League',
+  'UEFA Nations League',
+  'FA Cup',
+  'Coupe de France',
+  'Eredivisie',
+  'Primeira Liga',
+]
+
 const COMPETITION_TYPE_LABEL: Record<string, string> = {
   league: 'Ligues',
   cup: 'Coupes',
+  international: 'Internationales',
 }
 
 export default async function CompetitionsPage() {
-  const supabase = await createClient()
   const competitions = await getCompetitions()
 
-  // Compter les diary entries par compétition
-  const { data: counts } = await supabase
-    .from('diary_entries')
-    .select('match:matches(competition_id)')
-
-  const countByComp: Record<number, number> = {}
-  for (const entry of counts ?? []) {
-    const compId = (entry.match as unknown as { competition_id: number } | null)?.competition_id
-    if (compId) countByComp[compId] = (countByComp[compId] ?? 0) + 1
-  }
-
-  // Trier par nombre de logs (décroissant), grouper par type
-  const sorted = [...competitions].sort(
-    (a, b) => (countByComp[b.id] ?? 0) - (countByComp[a.id] ?? 0)
-  )
+  const sorted = [...competitions].sort((a, b) => {
+    const ia = POPULARITY_ORDER.indexOf(a.name)
+    const ib = POPULARITY_ORDER.indexOf(b.name)
+    if (ia === -1 && ib === -1) return a.name.localeCompare(b.name)
+    if (ia === -1) return 1
+    if (ib === -1) return -1
+    return ia - ib
+  })
 
   const byType = sorted.reduce<Record<string, typeof competitions>>((acc, c) => {
     const type = c.type ?? 'league'
@@ -37,11 +46,17 @@ export default async function CompetitionsPage() {
     return acc
   }, {})
 
+  // Ordre d'affichage des sections
+  const typeOrder = ['league', 'cup', 'international']
+  const entries = typeOrder
+    .filter((t) => byType[t])
+    .map((t) => [t, byType[t]] as const)
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="font-display mb-6 text-2xl font-bold">Compétitions</h1>
 
-      {Object.entries(byType).map(([type, comps]) => (
+      {entries.map(([type, comps]) => (
         <section key={type} className="mb-8">
           <h2 className="text-muted-foreground mb-3 text-sm font-semibold tracking-wider uppercase">
             {COMPETITION_TYPE_LABEL[type] ?? type}
@@ -73,11 +88,7 @@ export default async function CompetitionsPage() {
                     <p className="text-muted-foreground text-xs">{competition.country}</p>
                   )}
                 </div>
-                {countByComp[competition.id] ? (
-                  <span className="text-muted-foreground text-xs">{countByComp[competition.id]} log{countByComp[competition.id] > 1 ? 's' : ''}</span>
-                ) : (
-                  <span className="text-muted-foreground text-xs">→</span>
-                )}
+                <span className="text-muted-foreground text-xs">→</span>
               </Link>
             ))}
           </div>
