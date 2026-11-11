@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { createClient } from '@/lib/supabase/server'
 import { getCompetitions } from '@/lib/queries'
 
 export const revalidate = 3600
@@ -10,10 +11,26 @@ const COMPETITION_TYPE_LABEL: Record<string, string> = {
 }
 
 export default async function CompetitionsPage() {
+  const supabase = await createClient()
   const competitions = await getCompetitions()
 
-  // Grouper par type puis par pays
-  const byType = competitions.reduce<Record<string, typeof competitions>>((acc, c) => {
+  // Compter les diary entries par compétition
+  const { data: counts } = await supabase
+    .from('diary_entries')
+    .select('match:matches(competition_id)')
+
+  const countByComp: Record<number, number> = {}
+  for (const entry of counts ?? []) {
+    const compId = (entry.match as unknown as { competition_id: number } | null)?.competition_id
+    if (compId) countByComp[compId] = (countByComp[compId] ?? 0) + 1
+  }
+
+  // Trier par nombre de logs (décroissant), grouper par type
+  const sorted = [...competitions].sort(
+    (a, b) => (countByComp[b.id] ?? 0) - (countByComp[a.id] ?? 0)
+  )
+
+  const byType = sorted.reduce<Record<string, typeof competitions>>((acc, c) => {
     const type = c.type ?? 'league'
     if (!acc[type]) acc[type] = []
     acc[type].push(c)
@@ -56,7 +73,11 @@ export default async function CompetitionsPage() {
                     <p className="text-muted-foreground text-xs">{competition.country}</p>
                   )}
                 </div>
-                <span className="text-muted-foreground text-xs">→</span>
+                {countByComp[competition.id] ? (
+                  <span className="text-muted-foreground text-xs">{countByComp[competition.id]} log{countByComp[competition.id] > 1 ? 's' : ''}</span>
+                ) : (
+                  <span className="text-muted-foreground text-xs">→</span>
+                )}
               </Link>
             ))}
           </div>
