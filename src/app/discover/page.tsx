@@ -8,7 +8,7 @@ import { RatingStars } from '@/components/kickbox/RatingStars'
 import { UserAvatar } from '@/components/kickbox/UserAvatar'
 import type { Match } from '@/lib/types'
 
-export const revalidate = 60
+export const revalidate = 300
 
 export default async function DiscoverPage() {
   const supabase = await createClient()

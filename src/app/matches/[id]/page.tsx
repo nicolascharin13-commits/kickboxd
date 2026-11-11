@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { MapPin, Calendar, User } from 'lucide-react'
-import { getMatch, getMatchReviews, getReviewComments } from '@/lib/queries'
+import { getMatch, getMatchReviews } from '@/lib/queries'
 import { createClient } from '@/lib/supabase/server'
 import { syncMatchDetails } from '@/lib/sync-match-details'
 import { TeamBadge } from '@/components/kickbox/TeamBadge'
@@ -158,14 +158,19 @@ export default async function MatchPage({ params }: Props) {
     likedReviewIds = new Set((likesData ?? []).map((l) => l.review_id))
   }
 
-  // Commentaires de toutes les reviews
-  const commentsMap: Record<string, Awaited<ReturnType<typeof getReviewComments>>> = {}
+  // Commentaires de toutes les reviews — batch fetch (1 requête au lieu de N)
+  const commentsMap: Record<string, { id: string; content: string; created_at: string; user_id: string; profile: { username: string; display_name: string | null; avatar_url: string | null } | null }[]> = {}
   if (reviews.length > 0) {
-    await Promise.all(
-      reviews.map(async (r) => {
-        commentsMap[r.id] = await getReviewComments(r.id)
-      })
-    )
+    const { data: allComments } = await supabase
+      .from('review_comments')
+      .select('id, content, created_at, user_id, review_id, profile:profiles(username, display_name, avatar_url)')
+      .in('review_id', reviews.map((r) => r.id))
+      .order('created_at', { ascending: true })
+    for (const c of allComments ?? []) {
+      const rid = (c as unknown as { review_id: string }).review_id
+      if (!commentsMap[rid]) commentsMap[rid] = []
+      commentsMap[rid].push(c as unknown as typeof commentsMap[string][number])
+    }
   }
 
   const { data: allTagsData } = await supabase.from('tags').select('*').order('name')

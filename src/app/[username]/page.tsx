@@ -223,19 +223,6 @@ export default async function ProfilePage({ params }: Props) {
         </section>
       )}
 
-      {profile.matches_logged_count > 0 && false && (
-        <section className="mt-8">
-          <div className="border-border rounded-lg border p-4 text-center">
-            <p className="text-muted-foreground text-sm" />
-            <Link
-              href={`/${username}/diary`}
-              className="text-primary mt-1 block text-sm hover:underline"
-            >
-              Voir le journal →
-            </Link>
-          </div>
-        </section>
-      )}
     </div>
   )
 }
